@@ -1,0 +1,47 @@
+{
+    "full_name": "Jane Doe",
+    "headline": "Software Engineer",
+    "headline_secondary": "Cloud & Infrastructure",
+    "email": "jane.doe@example.com",
+    "phone": "+48 600 000 000",
+    "location": "Wrocław, Poland",
+    "linkedin_url": "https://www.linkedin.com/in/janedoe",
+    "github_username": "janedoe",
+    "cv_style": ["sidebar", "classic"],
+    "include_photo": true,
+    "include_cover_letter": false,
+    "include_gdpr_clause": false,
+    "paper_size": ["a4", "letter"],
+    "project_slug": "{{ cookiecutter.full_name | slugify }}-cv",
+    "github_repo_owner": "{{ cookiecutter.github_username }}",
+
+    "__name_slug": "{{ cookiecutter.full_name | slugify }}",
+    "__image": "{{ cookiecutter.project_slug }}:latest",
+
+    "__prompts__": {
+        "full_name": "Your full name (as printed on the CV)",
+        "headline": "Job title / headline",
+        "headline_secondary": "Second headline line (sidebar style only, leave empty to hide)",
+        "email": "Email address",
+        "phone": "Phone number (leave empty to hide)",
+        "location": "City, Country",
+        "linkedin_url": "LinkedIn profile URL (leave empty to hide)",
+        "github_username": "GitHub username (leave empty to hide)",
+        "cv_style": {
+            "__prompt__": "CV design",
+            "sidebar": "Sidebar: two columns, accent header, optional photo (modern-latex-cv)",
+            "classic": "Classic: single column, ATS friendly (Jake's Resume)"
+        },
+        "include_photo": "Include a round photo in the sidebar? (sidebar style only)",
+        "include_cover_letter": "Add a matching cover letter (src/cover-letter.tex)?",
+        "include_gdpr_clause": "Add the Polish RODO/GDPR recruitment consent clause at the bottom?",
+        "paper_size": "Paper size",
+        "project_slug": "Repository / directory name",
+        "github_repo_owner": "GitHub owner of the new repo (used for the clone URL in the README)"
+    },
+
+    "_copy_without_render": [
+        ".github/workflows/*.yaml",
+        "src/resources/*"
+    ]
+}

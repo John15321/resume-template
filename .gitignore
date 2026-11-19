@@ -1,0 +1,16 @@
+# Python bytecode from the hooks
+__pycache__/
+*.py[cod]
+
+# Editor / OS cruft
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+
+# Local test renders (scripts/test-template.sh)
+/_test/
+
+# Personal helper scripts, never committed
+/local-scripts/

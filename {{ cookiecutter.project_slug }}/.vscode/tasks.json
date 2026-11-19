@@ -1,0 +1,99 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build CV PDF",
+      "type": "shell",
+      "command": "bash",
+      "args": ["./scripts/build-pdf.sh"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+{%- if cookiecutter.include_cover_letter %}
+    {
+      "label": "Build cover letter PDF",
+      "type": "shell",
+      "command": "bash",
+      "args": ["./scripts/build-pdf.sh"],
+      "options": {
+        "env": { "MAIN": "cover-letter" }
+      },
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+{%- endif %}
+    {
+      "label": "Watch CV (rebuild on save)",
+      "type": "shell",
+      "command": "bash",
+      "args": ["./scripts/watch.sh"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build CV image",
+      "type": "shell",
+      "command": "bash",
+      "args": ["./scripts/build-image.sh"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Open CV container shell",
+      "type": "shell",
+      "command": "bash",
+      "args": ["./scripts/open-shell.sh"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean CV build outputs",
+      "type": "shell",
+      "command": "bash",
+      "args": ["./scripts/clean.sh"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Gather CV artifacts",
+      "type": "shell",
+      "command": "bash",
+      "args": ["./scripts/gather-artifacts.sh"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

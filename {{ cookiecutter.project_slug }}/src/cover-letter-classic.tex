@@ -1,0 +1,80 @@
+{%- macro tex(s) -%}
+{{ s | replace('\\', '\\textbackslash{}') | replace('&', '\\&') | replace('%', '\\%') | replace('$', '\\$') | replace('#', '\\#') | replace('_', '\\_') }}
+{%- endmacro -%}
+{%- macro url(s) -%}
+{{ s | replace('%', '\\%') | replace('#', '\\#') }}
+{%- endmacro -%}
+%-----------------------------------------------------------------------------%
+%
+%	{{ tex(cookiecutter.full_name) }} -- Cover Letter
+%
+%	Typography matches src/cv.tex ("Jake's Resume" style) so the two
+%	documents form a consistent application package.
+%	Treat this as a template: copy/adjust the recipient, reference and body
+%	for every application.
+%
+%-----------------------------------------------------------------------------%
+
+\documentclass[{{ cookiecutter.paper_size }}paper,11pt]{article}
+{% raw %}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\usepackage[english]{babel}
+\usepackage{fontawesome5}
+\usepackage{parskip}
+
+\addtolength{\oddsidemargin}{-0.25in}
+\addtolength{\evensidemargin}{-0.25in}
+\addtolength{\textwidth}{0.5in}
+
+\urlstyle{same}
+\raggedright
+\setlength{\parskip}{8pt}
+\pagestyle{empty}
+{% endraw %}
+\begin{document}
+
+%----------HEADING----------
+{%- set contact = [
+    '\\faMapMarker\\ ' ~ tex(cookiecutter.location),
+    ('\\faPhone\\ ' ~ tex(cookiecutter.phone)) if cookiecutter.phone else '',
+    '\\faEnvelope\\ \\href{mailto:' ~ url(cookiecutter.email) ~ '}{\\underline{' ~ tex(cookiecutter.email) ~ '}}',
+    ('\\faLinkedin\\ \\href{' ~ url(cookiecutter.linkedin_url) ~ '}{\\underline{LinkedIn}}') if cookiecutter.linkedin_url else '',
+    ('\\faGithub\\ \\href{https://github.com/' ~ cookiecutter.github_username ~ '}{\\underline{' ~ tex(cookiecutter.github_username) ~ '}}') if cookiecutter.github_username else '',
+] | select | list %}
+\begin{center}
+    \textbf{\Huge \scshape {{ tex(cookiecutter.full_name) }}} \\ \vspace{3pt}
+    \small {{ contact | join('\n    $|$ ') }}
+\end{center}
+\vspace{-6pt}
+\noindent\rule{\textwidth}{0.4pt}
+
+\begin{flushright}
+{{ tex(cookiecutter.location.split(',')[0]) }}, \today
+\end{flushright}
+
+%----------RECIPIENT----------
+Hiring Team\\
+Example Corp\\
+1 Example Street, 00-000 City
+
+\textbf{Re: Application for the Senior Software Engineer position (ref.\ 2026/42)}
+
+Dear Hiring Team,
+
+% Opening: which role, where you saw it, and the one-sentence reason you fit.
+I am writing to apply for the Senior Software Engineer position at Example Corp. With six years of experience building cloud infrastructure and developer tooling, I am excited by the chance to help your platform team make every product team faster.
+
+% Middle: one or two paragraphs of evidence that map your experience to the job ad.
+In my current role at Example Corp I led the migration of more than forty services to Kubernetes and designed a self-service Terraform catalogue now used across the company. Earlier, at Sample Systems, I built Go tooling that automated environment provisioning and maintained CI/CD for a 25-service monorepo. These projects taught me to balance reliability with developer experience, which is exactly what your posting describes.
+
+% Closing: availability, what you've attached, thanks.
+I would welcome the opportunity to discuss how I can contribute to your team. I am available to start within one month. Please find my CV attached. Thank you for considering my application.
+
+Yours sincerely,\\[14pt]
+{{ tex(cookiecutter.full_name) }}
+
+\end{document}

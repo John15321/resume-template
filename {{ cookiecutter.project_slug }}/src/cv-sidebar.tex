@@ -1,0 +1,554 @@
+{%- macro tex(s) -%}
+{{ s | replace('\\', '\\textbackslash{}') | replace('&', '\\&') | replace('%', '\\%') | replace('$', '\\$') | replace('#', '\\#') | replace('_', '\\_') }}
+{%- endmacro -%}
+{%- macro url(s) -%}
+{{ s | replace('%', '\\%') | replace('#', '\\#') }}
+{%- endmacro -%}
+{%- set paper = cookiecutter.paper_size -%}
+{% raw %}%-----------------------------------------------------------------------------------------------------------------------------------------------%
+%	The MIT License (MIT)
+%
+%	Copyright (c) 2021 Philip Empl
+%
+%	Permission is hereby granted, free of charge, to any person obtaining a copy
+%	of this software and associated documentation files (the "Software"), to deal
+%	in the Software without restriction, including without limitation the rights
+%	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+%	copies of the Software, and to permit persons to whom the Software is
+%	furnished to do so, subject to the following conditions:
+%
+%	The above copyright notice and this permission notice shall be included in
+%	all copies or substantial portions of the Software.
+%
+%	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+%	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+%	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+%	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+%	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+%	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+%	THE SOFTWARE.
+%
+%-----------------------------------------------------------------------------------------------------------------------------------------------%
+%
+{% endraw %}%	{{ tex(cookiecutter.full_name) }} -- CV
+{% raw %}%	Based on the "sidebar" modern-latex-cv template by Philip Empl
+%	(https://www.overleaf.com/latex/templates/modern-latex-cv/qmdwjvcrcrph)
+%
+%============================================================================%
+%
+%	DOCUMENT DEFINITION
+%
+%============================================================================%
+
+{% endraw %}\documentclass[10pt,{{ paper }}paper,english]{article}
+{% raw %}
+
+%----------------------------------------------------------------------------------------
+%	ENCODING
+%----------------------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[USenglish]{isodate}
+\usepackage{fancyhdr}
+\usepackage[numbers]{natbib}
+
+%----------------------------------------------------------------------------------------
+%	LOGIC
+%----------------------------------------------------------------------------------------
+
+\usepackage{xstring, xifthen}
+\usepackage{enumitem}
+\usepackage[english]{babel}
+\usepackage{pdfpages}
+\usepackage{changepage}
+
+%----------------------------------------------------------------------------------------
+%	FONT BASICS
+%----------------------------------------------------------------------------------------
+
+\usepackage[default]{raleway}
+
+\renewcommand*\familydefault{\sfdefault}
+\usepackage[T1]{fontenc}
+
+\usepackage{moresize}
+
+%----------------------------------------------------------------------------------------
+%	FONT AWESOME ICONS
+%----------------------------------------------------------------------------------------
+
+\usepackage{fontawesome}
+
+\newcommand{\vcenteredinclude}[1]{\begingroup
+\setbox0=\hbox{\includegraphics{#1}}%
+\parbox{\wd0}{\box0}\endgroup}
+\newcommand{\tab}[1]{\hspace{.2\textwidth}\rlap{#1}}
+\newcommand*{\vcenteredhbox}[1]{\begingroup
+\setbox0=\hbox{#1}\parbox{\wd0}{\box0}\endgroup}
+
+\newcommand{\icon}[3] {
+	\makebox(#2, #2){\textcolor{maincol}{\ifthenelse{\equal{#1}{Linkedin}}{\raisebox{3.5pt}{\csname fa#1\endcsname}}{\csname fa#1\endcsname}}}
+}
+
+\newcommand{\icontext}[4] {
+	\vcenteredhbox{\icon{#1}{#2}{#3}}  \hspace{2pt}  \parbox{0.9\mpwidth}{\textcolor{#4}{#3}}
+}
+
+\newcommand{\iconhref}[5] {
+    \vcenteredhbox{\icon{#1}{#2}{#5}}  \hspace{2pt} \href{#4}{\textcolor{#5}{#3}}
+}
+
+\newcommand{\iconemail}[5] {
+    \vcenteredhbox{\icon{#1}{#2}{#5}}  \hspace{2pt} \href{mailto:#4}{\textcolor{#5}{#3}}
+}
+
+%----------------------------------------------------------------------------------------
+%	PAGE LAYOUT  DEFINITIONS
+%----------------------------------------------------------------------------------------
+
+\usepackage{paracol}
+\usepackage{tikzpagenodes}
+\usetikzlibrary{calc}
+\usepackage{lmodern}
+\usepackage{multicol}
+\usepackage{atbegshi}
+{% endraw %}\usepackage[{{ paper }}paper]{geometry}
+{% raw %}
+\geometry{top=1cm, bottom=0.5cm, left=1cm, right=1cm}
+
+\usepackage{fancyhdr}
+\pagestyle{empty}
+
+\setlength{\parindent}{0mm}
+\renewcommand{\baselinestretch}{0.94}
+
+%----------------------------------------------------------------------------------------
+%	TABLE /ARRAY DEFINITIONS
+%----------------------------------------------------------------------------------------
+
+\usepackage{array}
+
+\newcolumntype{x}[1]{%
+>{\raggedleft\hspace{0pt}}p{#1}}%
+
+%----------------------------------------------------------------------------------------
+%	GRAPHICS DEFINITIONS
+%----------------------------------------------------------------------------------------
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{ragged2e}
+\usetikzlibrary{shapes, backgrounds,mindmap, trees}
+\graphicspath{{src/resources/}{resources/}}
+
+%----------------------------------------------------------------------------------------
+%	Color DEFINITIONS
+%----------------------------------------------------------------------------------------
+\usepackage{transparent}
+\usepackage{color}
+
+\definecolor{maincol}{RGB}{ 64,64,64}
+\definecolor{darkcol}{RGB}{ 70, 70, 70 }
+\definecolor{lightcol}{RGB}{245,245,245}
+\definecolor{accentcol}{RGB}{59,77,97}
+
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\mpwidth}{\linewidth-\fboxsep-\fboxsep}
+
+%============================================================================%
+%
+%	CV COMMANDS
+%
+%============================================================================%
+
+\newcommand{\cvlist}[1] {
+	\begin{itemize}{#1}\end{itemize}
+}
+
+\newcommand{\cvtext}[1] {
+	\begin{tabular*}{1\mpwidth}{p{0.98\mpwidth}}
+		\parbox{1\mpwidth}{\RaggedRight #1}
+	\end{tabular*}
+}
+\newcommand{\cvtextsmall}[1] {
+	\begin{tabular*}{0.8\mpwidth}{p{0.8\mpwidth}}
+		\parbox{0.8\mpwidth}{\RaggedRight #1}
+	\end{tabular*}
+}
+
+\newcommand{\cvsection}[1] {
+	\vspace{10pt}
+	\cvtext{
+		\textbf{\LARGE{\textcolor{darkcol}{#1}}}\\[-4pt]
+		\textcolor{accentcol}{ \rule{0.2\textwidth}{1.5pt} } \\
+	}
+}
+
+\newcommand{\cvsectionsmall}[1] {
+	\vspace{10pt}
+	\cvtext{
+		\textbf{\Large{\textcolor{darkcol}{#1}}}\\[-4pt]
+		\textcolor{accentcol}{ \rule{0.2\textwidth}{1.5pt} } \\
+	}
+}
+
+\newcommand{\cvsidesection}[1] {
+	\vspace{8pt}
+	\cvtext{
+		\textbf{\large{\textcolor{darkcol}{#1}}}\\[-6pt]
+		\textcolor{accentcol}{ \rule{0.2\textwidth}{1.2pt} } \\[4pt]
+	}
+}
+
+\newcommand{\cvheadline}[1] {
+	\vspace{16pt}
+	\cvtext{
+		\textbf{\Huge{\textcolor{accentcol}{#1}}}\\[-4pt]
+
+	}
+}
+
+\newcommand{\cvsubheadline}[1] {
+	\vspace{16pt}
+	\cvtext{
+		\textbf{\huge{\textcolor{darkcol}{#1}}}\\[-4pt]
+
+	}
+}
+
+%----------------------------------------------------------------------------------------
+%	META SKILL
+%----------------------------------------------------------------------------------------
+
+\newcommand{\cvskill}[2] {
+	\begin{tabular*}{1\mpwidth}{p{0.72\mpwidth}  r}
+ 		\textcolor{black}{\textbf{#1}} & \textcolor{maincol}{#2}\\
+	\end{tabular*}%
+}
+
+
+%----------------------------------------------------------------------------------------
+%	 CV EVENT
+%----------------------------------------------------------------------------------------
+
+\newcommand{\cvevent}[4] {
+
+	\parbox{\mpwidth}{
+		\begin{tabular*}{1\mpwidth}{p{0.66\mpwidth}  r}
+	 		\textcolor{black}{\textbf{#2}} & \colorbox{accentcol}{\makebox[0.32\mpwidth]{\textcolor{white}{\textbf{#1}}}} \\
+			\textcolor{maincol}{#3} & \\
+		\end{tabular*}\\[3pt]
+
+		\ifthenelse{\isempty{#4}}{}{
+			\cvtext{#4}\\
+		}
+	}
+	\vspace{4pt}
+}
+
+%----------------------------------------------------------------------------------------
+%	 CV META EVENT
+%----------------------------------------------------------------------------------------
+
+\newcommand{\cvmetaevent}[4] {
+	\textcolor{maincol} { \cvtext{\textbf{#1}}}\\%
+	\ifthenelse{\isempty{#2}}{}{\textcolor{black} {\cvtext{\textbf{#2}} }\\}%
+	\ifthenelse{\isempty{#3}}{}{\cvtext{{ \textcolor{maincol} {#3} }}}%
+	\ifthenelse{\isempty{#4}}{}{\\\cvtext{#4}}%
+	\par\vspace{10pt}%
+}
+
+% HEADER AND FOOTER
+%====================================
+\newcommand\Header[1]{%
+\begin{tikzpicture}[remember picture,overlay]
+\fill[accentcol]
+  (current page.north west) -- (current page.north east) --
+  ([yshift=50pt]current page.north east|-current page text area.north east) --
+  ([yshift=50pt,xshift=-3cm]current page.north|-current page text area.north) --
+  ([yshift=10pt,xshift=-5cm]current page.north|-current page text area.north) --
+  ([yshift=10pt]current page.north west|-current page text area.north west) -- cycle;
+\node[font=\sffamily\bfseries\color{white},anchor=west,
+  xshift=0.7cm,yshift=-0.32cm] at (current page.north west)
+  {\fontsize{12}{12}\selectfont {#1}};
+\end{tikzpicture}%
+}
+
+\newcommand\Footer[1]{%
+\begin{tikzpicture}[remember picture,overlay]
+\fill[lightcol]
+  (current page.south east) -- (current page.south west) --
+  ([yshift=-80pt]current page.south east|-current page text area.south east) --
+  ([yshift=-80pt,xshift=-6cm]current page.south|-current page text area.south) --
+  ([xshift=-2.5cm,yshift=-10pt]current page.south|-current page text area.south) --
+  ([yshift=-10pt]current page.south east|-current page text area.south east) -- cycle;
+\end{tikzpicture}%
+}
+
+%============================================================================%
+{% endraw %}%
+%	DOCUMENT CONTENT
+%
+%  !! EDIT YOUR CV BELOW THIS LINE !!
+%  Everything above this block is template boilerplate. Only touch it if you
+%  want to change the design (colours live in "Color DEFINITIONS", margins in
+%  "PAGE LAYOUT DEFINITIONS").
+%
+%============================================================================%
+\begin{document}
+
+\columnratio{0.27}
+\setlength{\columnsep}{1.6em}
+\setlength{\columnseprule}{1pt}
+\colseprulecolor{white}
+
+\AtBeginShipoutFirst{\Header{Curriculum Vitae}\Footer{}}
+\AtBeginShipout{\AtBeginShipoutAddToBox{\Header{Curriculum Vitae}\Footer{}}}
+
+\newpage
+
+\colseprulecolor{lightcol}
+\columnratio{0.27}
+\setlength{\columnsep}{1.6em}
+\setlength{\columnseprule}{1pt}
+\begin{paracol}{2}
+
+\begin{leftcolumn}
+{%- if cookiecutter.include_photo %}
+%---------------------------------------------------------------------------------------
+%	PHOTO (cropped to a circle, bordered)
+%   Drop your picture at src/resources/photo.jpg (a square-ish crop works best,
+%   the template circles it automatically). Until that file exists, a circle
+%   with your initials is shown instead.
+%----------------------------------------------------------------------------------------
+\newlength{\photodiam}
+\setlength{\photodiam}{0.85\linewidth}
+\newif\ifhavephoto
+\IfFileExists{src/resources/photo.jpg}{\havephototrue}{\IfFileExists{resources/photo.jpg}{\havephototrue}{\havephotofalse}}
+\begin{center}
+\begin{tikzpicture}
+	\ifhavephoto
+	\begin{scope}
+		\clip (0,0) circle (0.5\photodiam);
+		\node[inner sep=0pt] at (0,0) {\includegraphics[height=\photodiam,keepaspectratio]{photo.jpg}};
+	\end{scope}
+	\else
+	\fill[lightcol] (0,0) circle (0.5\photodiam);
+	\node[text=accentcol, font=\Huge\bfseries] at (0,0) {{ '{' }}{% for part in cookiecutter.full_name.split() %}{{ part[0] }}{% endfor %}{{ '}' }};
+	\fi
+	\draw[color=accentcol!45!white, line width=2.5pt] (0,0) circle (0.5\photodiam);
+\end{tikzpicture}
+\end{center}
+{%- else %}
+\vspace{4pt}
+{%- endif %}
+
+%---------------------------------------------------------------------------------------
+%	NAME / TITLE
+%   Edit the text inside { } on each line.
+%   The title is split across two lines so it doesn't wrap awkwardly.
+%   \\[3pt] is the gap between the lines; increase the number for more space.
+%----------------------------------------------------------------------------------------
+	\fcolorbox{white}{white}{\begin{minipage}[c][1.7cm][c]{1\mpwidth}
+		\LARGE{\textbf{\textcolor{maincol}{ {{- tex(cookiecutter.full_name) -}} }}} \\[2pt]
+		\normalsize{ \textcolor{maincol} { {{- tex(cookiecutter.headline) -}} } }
+{%- if cookiecutter.headline_secondary %} \\[3pt]
+		\normalsize{ \textcolor{maincol} { {{- tex(cookiecutter.headline_secondary) -}} } }
+{%- endif %}
+\end{minipage}} \\
+
+\cvsidesection{Contact}
+
+% Each line is: icon, size (leave as 14), display text, colour (leave as black).
+% \iconemail: the 4th argument is the actual address used for the mailto: link.
+% \iconhref:  the 4th argument is the URL; edit both the URL and the display text.
+% Icon names come from the fontawesome package (v4): MapMarker, Phone, Envelope,
+% Linkedin, Github, Globe, ... (drop the \fa prefix).
+\icontext{MapMarker}{14}{ {{- tex(cookiecutter.location) -}} }{black}\\[3pt]
+{%- if cookiecutter.phone %}
+\icontext{Phone}{14}{ {{- tex(cookiecutter.phone) -}} }{black}\\[3pt]
+{%- endif %}
+\iconemail{Envelope}{14}{ {{- tex(cookiecutter.email) -}} }{ {{- url(cookiecutter.email) -}} }{black}\\[3pt]
+{%- if cookiecutter.linkedin_url %}
+\iconhref{Linkedin}{14}{ {{- tex(cookiecutter.full_name) -}} }{ {{- url(cookiecutter.linkedin_url) -}} }{black}\\[3pt]
+{%- endif %}
+{%- if cookiecutter.github_username %}
+\iconhref{Github}{14}{ {{- tex(cookiecutter.github_username) -}} }{https://github.com/ {{- cookiecutter.github_username -}} }{black}\\[3pt]
+{%- endif %}
+
+\cvsidesection{Skills}
+
+% Each \item is one bullet. Add, remove, or edit lines freely.
+% \textbf{...} makes text bold: use it for the keywords recruiters scan for.
+% \mbox{...} keeps a phrase on one line so it doesn't break awkwardly.
+\cvtext{
+\begin{itemize}[leftmargin=*,topsep=2pt,itemsep=2pt,parsep=0pt]
+	\item \textbf{Python}, \textbf{Go}, \textbf{SQL}
+	\item \textbf{Kubernetes}, \textbf{Terraform}, \mbox{\textbf{GitHub Actions}}
+	\item \textbf{Linux} administration \& \mbox{troubleshooting}
+	\item Technical writing \& documentation
+	\item Fluent \textbf{English} (C1), native Polish
+\end{itemize}
+}
+
+%---------------------------------------------------------------------------------------
+%	INTERESTS
+%   Simple list: each \item is one line.
+%----------------------------------------------------------------------------------------
+\cvsidesection{Interests}
+
+\cvtext{
+\begin{itemize}[leftmargin=*,topsep=0pt,itemsep=0pt,parsep=0pt]
+	\item Open source
+	\item Distributed systems
+	\item Mountain hiking
+	\item Photography
+\end{itemize}
+}
+
+%---------------------------------------------------------------------------------------
+%	EDUCATION
+%   Each entry uses \cvmetaevent with four lines:
+%     {years}
+%     {Degree or qualification}
+%     {Institution}
+%     {Subtitle: wrap in \textit{...} for italics, or leave empty {}}
+%   To add another entry, copy a full \cvmetaevent block and edit the four lines.
+%----------------------------------------------------------------------------------------
+\cvsidesection{Education}
+
+\cvmetaevent
+{2019 -- 2021}
+{MSc, Computer Science}
+{University of Example}
+{\textit{Distributed Systems}}
+
+\vspace{2pt}
+\cvmetaevent
+{2015 -- 2019}
+{BSc, Computer Science}
+{University of Example}
+{}
+
+\end{leftcolumn}
+\begin{rightcolumn}
+%---------------------------------------------------------------------------------------
+%	PROFILE
+%   One-paragraph summary, the first thing a recruiter reads.
+%   Keep it to 3-4 sentences and tailor it to the role you're applying for.
+%----------------------------------------------------------------------------------------
+\cvsection{Profile}
+\vspace{2pt}
+
+\cvtext{Software engineer with six years of experience building reliable cloud infrastructure and developer tooling. Comfortable owning a system end to end, from design and implementation to on-call and documentation. Looking for a team where \mbox{platform engineering} directly shapes how quickly product teams can ship.}
+
+%---------------------------------------------------------------------------------------
+%	WORK EXPERIENCE
+%   Each job uses \cvevent with four parts, in this order:
+%     {date range}    shown in the dark badge on the right
+%     {Job title}
+%     {Company name}
+%     {Description}   either \cvtext{one paragraph} or an itemize list (see below)
+%
+%   Add a job: copy a full \cvevent block. Remove a job: delete the block.
+%   Keep jobs in reverse chronological order (newest first).
+%   Too many bullets will push the CV onto a second page.
+%
+%   Special characters: \& = &, \% = %, \L{} = Ł, \'c = ć, \k{e} = ę, etc.
+%   (UTF-8 also works directly: Ł, ć, ę, ń, ó, ś, ź, ż.)
+%----------------------------------------------------------------------------------------
+
+\vspace{4pt}
+\cvsection{Work experience}
+\vspace{2pt}
+
+\cvevent
+{03/2023 -- Present}
+	{Senior Software Engineer}
+	{Example Corp}
+	{
+	\begin{itemize}[leftmargin=*,topsep=0pt,itemsep=0pt,parsep=0pt]
+		\item Led the migration of 40+ services to \textbf{Kubernetes}, cutting deployment time from hours to minutes.
+		\item Designed a self-service \textbf{Terraform} module catalogue used by every product team.
+		\item Introduced SLOs and on-call runbooks, reducing pages by 60\% in the first quarter.
+		\item Mentored three engineers through their first production launches.
+	\end{itemize}
+	}
+
+\cvevent
+{07/2021 -- 02/2023}
+	{Software Engineer}
+	{Sample Systems}
+	{
+	\begin{itemize}[leftmargin=*,topsep=0pt,itemsep=0pt,parsep=0pt]
+		\item Built internal CLI tooling in \textbf{Go} that automated environment provisioning.
+		\item Maintained CI/CD pipelines in \textbf{GitHub Actions} for a monorepo of 25 services.
+	\end{itemize}
+	}
+
+\cvevent
+{10/2019 -- 06/2021}
+	{Software Engineering Intern}
+	{Placeholder Labs}
+	{
+	% A short role: \cvtext{} gives a single paragraph instead of bullets.
+	\cvtext{Wrote data pipelines in \textbf{Python} and \textbf{SQL} that replaced a weekly manual reporting process.}
+	}
+
+%---------------------------------------------------------------------------------------
+%	PROJECTS
+%   \cvevent works for anything with a title, an organisation and dates.
+%   Rename the section (e.g. Publications, Certifications) or delete it.
+%----------------------------------------------------------------------------------------
+\vspace{4pt}
+\cvsection{Projects}
+\vspace{2pt}
+
+\cvevent
+{2020 -- Present}
+	{Maintainer, example-tool}
+	{Open source, github.com/example/example-tool}
+	{
+	\cvtext{A small command line tool for validating configuration files, with 1k+ stars and contributors from a dozen companies.}
+	}
+
+\cvevent
+{2022}
+	{Speaker, ``Shipping Kubernetes Upgrades Without Pager Duty''}
+	{Example Cloud Native Meetup}
+	{
+	\cvtext{A 30 minute talk on canary node pools, automated rollbacks and the runbooks that made weekly upgrades boring.}
+	}
+
+\cvsection{Certifications}
+\vspace{2pt}
+
+\cvevent
+{2023}
+	{Certified Kubernetes Administrator (CKA)}
+	{The Linux Foundation}
+	{}
+
+\cvevent
+{2022}
+	{AWS Certified Solutions Architect, Associate}
+	{Amazon Web Services}
+	{}
+{%- if cookiecutter.include_gdpr_clause %}
+
+% Polish GDPR (RODO) recruitment consent clause, printed in tiny text at the
+% bottom of the page. Many Polish employers require it; delete the block if
+% you apply abroad.
+{% raw %}\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=south west, xshift=1cm, yshift=0.3cm, text width=\paperwidth-2cm, align=left,
+  font=\fontsize{4}{3.2}\selectfont, text=maincol!45] at (current page.south west) {%
+Wyra\.zam zgod\k{e} na przetwarzanie moich danych osobowych dla potrzeb niezb\k{e}dnych do realizacji procesu tej oraz przysz\l{}ych rekrutacji (zgodnie z ustaw\k{a} z dnia 10 maja 2018 roku o ochronie danych osobowych (Dz.\ Ustaw z 2018, poz.\ 1000) oraz zgodnie z Rozporz\k{a}dzeniem Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r.\ w sprawie ochrony os\'ob fizycznych w zwi\k{a}zku z przetwarzaniem danych osobowych i w sprawie swobodnego przep\l{}ywu takich danych oraz uchylenia dyrektywy 95/46/WE (RODO)).%
+};
+\end{tikzpicture}
+{% endraw %}{%- endif %}
+
+\end{rightcolumn}
+\end{paracol}
+
+\end{document}

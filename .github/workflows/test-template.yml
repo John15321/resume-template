@@ -1,0 +1,53 @@
+name: Test template
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  render-and-build:
+    name: ${{ matrix.variant }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        variant:
+          - sidebar
+          - sidebar-nophoto
+          - sidebar-full
+          - classic
+          - classic-full
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install cookiecutter and poppler
+        run: |
+          pipx install cookiecutter
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils
+
+      - name: Render and build
+        env:
+          CONTAINER_ENGINE: docker
+        run: scripts/test-template.sh "${{ matrix.variant }}"
+
+      - name: Upload PDFs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.variant }}
+          path: |
+            _test/${{ matrix.variant }}/*/artifacts/*.pdf
+            _test/${{ matrix.variant }}.log
+          if-no-files-found: ignore
+          retention-days: 7

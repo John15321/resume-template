@@ -1,0 +1,31 @@
+# Build output (PDFs are published by CI, not committed)
+build/
+artifacts/
+
+# LaTeX auxiliary files (in case something is compiled outside build/)
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex
+*.synctex.gz
+*.synctex(busy)
+*.toc
+*.xdv
+
+# Local helper scripts and private notes (never committed)
+local/
+local-scripts/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*~
+*.swp

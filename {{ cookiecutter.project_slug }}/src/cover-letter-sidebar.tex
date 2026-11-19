@@ -1,0 +1,108 @@
+{%- macro tex(s) -%}
+{{ s | replace('\\', '\\textbackslash{}') | replace('&', '\\&') | replace('%', '\\%') | replace('$', '\\$') | replace('#', '\\#') | replace('_', '\\_') }}
+{%- endmacro -%}
+{%- macro url(s) -%}
+{{ s | replace('%', '\\%') | replace('#', '\\#') }}
+{%- endmacro -%}
+%============================================================================%
+%
+%	{{ tex(cookiecutter.full_name) }} -- Cover Letter
+%
+%	Visual style (fonts, colours, icons) matches src/cv.tex so the two
+%	documents form a consistent application package.
+%	Treat this as a template: copy/adjust the recipient, reference and body
+%	for every application.
+%
+%============================================================================%
+\documentclass[10pt,{{ cookiecutter.paper_size }}paper,english]{article}
+{% raw %}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[USenglish]{isodate}
+\usepackage[english]{babel}
+\usepackage[default]{raleway}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage{moresize}
+\usepackage{fontawesome}
+\usepackage{xifthen}
+{% endraw -%}
+\usepackage[{{ cookiecutter.paper_size }}paper]{geometry}
+{% raw -%}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{parskip}
+\usepackage{hyperref}
+
+\geometry{top=2.2cm, bottom=2.2cm, left=2.3cm, right=2.3cm}
+
+% Colours matched to src/cv.tex
+\definecolor{maincol}{RGB}{ 64,64,64}
+\definecolor{darkcol}{RGB}{ 70, 70, 70 }
+\definecolor{accentcol}{RGB}{59,77,97}
+
+\hypersetup{colorlinks=true, urlcolor=accentcol, linkcolor=accentcol}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{8pt}
+
+\newcommand{\icontext}[2]{\textcolor{accentcol}{\csname fa#1\endcsname} \ \textcolor{maincol}{#2}}
+{% endraw %}
+\begin{document}
+
+%---------------------------------------------------------------------------------------
+%	LETTERHEAD
+%----------------------------------------------------------------------------------------
+{\LARGE\textbf{\textcolor{accentcol}{ {{- tex(cookiecutter.full_name) -}} }}}\\[2pt]
+{\normalsize\textcolor{maincol}{ {{- tex(cookiecutter.headline) -}} }}
+
+\vspace{4pt}
+% Contact details, separated by \quad. Add or remove \icontext entries freely.
+\noindent
+\icontext{MapMarker}{ {{- tex(cookiecutter.location) -}} }\quad
+{%- if cookiecutter.phone %}
+\icontext{Phone}{ {{- tex(cookiecutter.phone) -}} }\quad
+{%- endif %}
+\icontext{Envelope}{\href{mailto:{{ url(cookiecutter.email) }}}{ {{- tex(cookiecutter.email) -}} }}
+{%- if cookiecutter.linkedin_url %}\quad
+\icontext{Linkedin}{\href{ {{- url(cookiecutter.linkedin_url) -}} }{LinkedIn}}
+{%- endif %}
+{%- if cookiecutter.github_username %}\quad
+\icontext{Github}{\href{https://github.com/ {{- cookiecutter.github_username -}} }{ {{- tex(cookiecutter.github_username) -}} }}
+{%- endif %}
+
+\vspace{2pt}
+\textcolor{accentcol}{\rule{\textwidth}{1.2pt}}
+
+\vspace{10pt}
+
+\begin{flushright}
+\textcolor{maincol}{ {{- tex(cookiecutter.location.split(',')[0]) -}}, \today}
+\end{flushright}
+
+%---------------------------------------------------------------------------------------
+%	RECIPIENT
+%----------------------------------------------------------------------------------------
+Hiring Team\\
+Example Corp\\
+1 Example Street, 00-000 City
+
+\vspace{6pt}
+\textbf{Re: Application for the Senior Software Engineer position (ref.\ 2026/42)}
+
+\vspace{6pt}
+Dear Hiring Team,
+
+% Opening: which role, where you saw it, and the one-sentence reason you fit.
+I am writing to apply for the Senior Software Engineer position at Example Corp. With six years of experience building cloud infrastructure and developer tooling, I am excited by the chance to help your platform team make every product team faster.
+
+% Middle: one or two paragraphs of evidence that map your experience to the job ad.
+In my current role at Example Corp I led the migration of more than forty services to Kubernetes and designed a self-service Terraform catalogue now used across the company. Earlier, at Sample Systems, I built Go tooling that automated environment provisioning and maintained CI/CD for a 25-service monorepo. These projects taught me to balance reliability with developer experience, which is exactly what your posting describes.
+
+% Closing: availability, what you've attached, thanks.
+I would welcome the opportunity to discuss how I can contribute to your team. I am available to start within one month. Please find my CV attached. Thank you for considering my application.
+
+\vspace{10pt}
+Yours sincerely,\\[14pt]
+{{ tex(cookiecutter.full_name) }}
+
+\end{document}
