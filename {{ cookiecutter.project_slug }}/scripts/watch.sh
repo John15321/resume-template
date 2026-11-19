@@ -16,5 +16,5 @@ exec "$ENGINE" run --rm -it \
     -v "$(workspace_mount)" \
     -w /workspace \
     "$IMAGE" \
-    latexmk -pdf -pvc -view=none -interaction=nonstopmode \
+    latexmk -pvc -view=none -interaction=nonstopmode \
         -outdir="$OUT_DIR" "$SRC_DIR/$MAIN.tex"

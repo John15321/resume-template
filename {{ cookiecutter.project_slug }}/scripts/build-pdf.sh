@@ -15,7 +15,7 @@ mkdir -p "$OUT_DIR"
     -v "$(workspace_mount)" \
     -w /workspace \
     "$IMAGE" \
-    latexmk -g -pdf -interaction=nonstopmode -halt-on-error \
+    latexmk -g -interaction=nonstopmode -halt-on-error \
         -outdir="$OUT_DIR" "$SRC_DIR/$MAIN.tex"
 
 if [ ! -f "$OUT_DIR/$MAIN.pdf" ]; then

@@ -12,4 +12,8 @@ RUN dnf install -y \
         make \
     && dnf clean all
 
+# A design needs a package that is missing? Fedora resolves TeX files
+# directly, so add a line like this and run `make image`:
+# RUN dnf install -y 'tex(somepackage.sty)' 'tex(someclass.cls)' && dnf clean all
+
 WORKDIR /workspace

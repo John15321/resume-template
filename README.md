@@ -27,6 +27,25 @@ Jake Gutierrez.
 Both can come with a matching cover letter and, for Polish employers, the RODO
 recruitment consent clause in small print at the bottom of the page.
 
+### Not locked to these two
+
+These are two well known designs picked as a starting point, nothing more.
+Overleaf's [CV gallery](https://www.overleaf.com/latex/templates/tagged/cv),
+CTAN and GitHub have hundreds more (Awesome-CV, moderncv, AltaCV, Deedy, ...),
+and the generated project is built to take any of them. Drop the template's
+files into `src/`, flip one line in `latexmkrc` if it needs XeLaTeX or
+LuaLaTeX, and add missing packages to the `Containerfile` by file name
+(`dnf install 'tex(name.sty)'`). The container, CI and releases stay the same.
+
+### Built for AI assistants
+
+Every generated project ships an `AGENTS.md` describing its layout, build,
+verification steps and how to swap designs, plus `CLAUDE.md` and
+`.github/copilot-instructions.md` pointing at it. Claude Code, GitHub Copilot,
+Codex, Cursor and friends read these automatically, so you can ask one to
+tailor the CV to a job posting or port it to a different template without
+explaining the setup.
+
 ## Usage
 
 Install [cookiecutter](https://cookiecutter.readthedocs.io/) once
@@ -70,11 +89,13 @@ versioned release.
 
 ## What you get
 
-A `Containerfile` (Fedora 45 + TeX Live + latexmk), a `Makefile` wrapping small
+A `Containerfile` (Fedora 45 + TeX Live with pdflatex, xelatex and lualatex,
+plus latexmk), a `latexmkrc` choosing the engine, a `Makefile` wrapping small
 POSIX shell scripts that auto-detect Podman or Docker, a GitHub Actions
-workflow that builds and releases the PDFs, and VS Code settings for
-LaTeX Workshop. Mounts are relabelled (`:Z`) so builds work on SELinux hosts
-like Fedora, and Git Bash on Windows is handled too.
+workflow that builds and releases the PDFs, VS Code settings for LaTeX
+Workshop, and the agent files described above. Mounts are relabelled (`:Z`)
+so builds work on SELinux hosts like Fedora, and Git Bash on Windows is
+handled too.
 
 ## Developing the template
 
@@ -92,7 +113,8 @@ IMAGE=my-texlive:latest scripts/test-template.sh   # reuse one prebuilt image
 
 LaTeX and Jinja share `{%`, `{{` and `{#`, so the `.tex` sources keep their
 preambles in `{% raw %}` blocks and escape user input through a small `tex()`
-macro defined at the top of each file.
+macro defined at the top of each file. `AGENTS.md` (and `CLAUDE.md`) at the
+repo root cover these rules for coding agents working on the template.
 
 ## Credits
 

@@ -1,0 +1,10 @@
+# latexmk configuration, read by make, the VS Code tasks and CI.
+
+# TeX engine. Both shipped designs use pdflatex. Switch when a design needs
+# system fonts or fontspec (Awesome-CV, most "modern" Overleaf templates):
+#   1 = pdflatex   4 = lualatex   5 = xelatex
+$pdf_mode = 1;
+
+# Let documents find classes, styles, images and fonts placed anywhere under
+# src/ (e.g. src/awesome-cv.cls), even though latexmk runs from the repo root.
+ensure_path('TEXINPUTS', './src//');

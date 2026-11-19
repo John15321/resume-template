@@ -100,6 +100,29 @@ git commit -m "Update CV"
 git push
 ```
 
+## Using a different design
+
+The design this repo started with is one of thousands of LaTeX CV templates.
+Browse the [Overleaf CV gallery](https://www.overleaf.com/latex/templates/tagged/cv),
+CTAN or GitHub (Awesome-CV, moderncv, AltaCV, Deedy, ...) and swap one in. The
+build does not care which you pick:
+
+- Put the template's main file at `src/cv.tex` and its `.cls`/`.sty`/fonts
+  anywhere under `src/`; they are found automatically.
+- If it uses XeLaTeX or LuaLaTeX (most templates with custom fonts do),
+  change `$pdf_mode` in `latexmkrc`.
+- If a package is missing, add `RUN dnf install -y 'tex(name.sty)'` to the
+  `Containerfile` and run `make image`.
+
+## Working with AI assistants
+
+The repo ships `AGENTS.md` (also read through `CLAUDE.md` and
+`.github/copilot-instructions.md`), which explains the layout, the build and
+the steps above. Claude Code, GitHub Copilot, Codex, Cursor and similar tools
+pick it up on their own, so prompts like *"tailor my CV to this job posting"*,
+*"port my content to Awesome-CV"* or *"add a publications section"* work
+without explaining the setup first.
+
 ## Make targets
 
 | Target | What it does |
